@@ -57,7 +57,7 @@ add_action( 'init', 'pmpro_mmpul_init' );
 /**
  * Load scripts.
  */
-function pmpro_mmpu_enqueue_scripts() {
+function pmpro_mmpul_enqueue_scripts() {
 
 	global $pmpro_pages, $post;
 
@@ -121,7 +121,7 @@ function pmpro_mmpu_enqueue_scripts() {
 		}
 	}
 }
-add_action( 'wp_enqueue_scripts', 'pmpro_mmpu_enqueue_scripts' );
+add_action( 'wp_enqueue_scripts', 'pmpro_mmpul_enqueue_scripts' );
 
 /**
  * Tell PMPro to look for templates in this plugin's templates/ folder.
