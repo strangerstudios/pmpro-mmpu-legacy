@@ -1,9 +1,7 @@
 <?php
-global $wpdb, $pmpro_msg, $pmpro_msgt, $current_user, $pmpro_levels;
+global $wpdb, $pmpro_msg, $pmpro_msgt, $current_user;
 
-if ( !empty( $pmpro_levels ) ) {
-	$pmpro_levels = pmpro_getAllLevels( false, true );
-}
+$pmpro_levels = pmpro_getAllLevels( false, true );
 
 $pmpro_groups = pmprommpu_get_groups();
 
