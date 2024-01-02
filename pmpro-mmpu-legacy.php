@@ -28,8 +28,9 @@
     * We loop through all levels and process each subscription cumulatively.
 */
 
-define("PMPRO_MMPU_LEGACY_DIR", dirname(__FILE__)); // signals our presence to the mother ship, and other add-ons
-define("PMPRO_MMPU_LEGACY_VER", "0.1"); // Version string to signal cache refresh during JS/CSS updates
+define( 'PMPRO_MMPU_LEGACY_FILE', __FILE__ );
+define( 'PMPRO_MMPU_LEGACY_DIR', dirname(__FILE__) ); // signals our presence to the mother ship, and other add-ons
+define( 'PMPRO_MMPU_LEGACY_VER', '0.1' ); // Version string to signal cache refresh during JS/CSS updates
 
 /**
  * Load the text domain.
