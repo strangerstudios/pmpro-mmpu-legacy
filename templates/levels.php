@@ -3,11 +3,9 @@ global $wpdb, $pmpro_msg, $pmpro_msgt, $current_user;
 
 $pmpro_levels = pmpro_getAllLevels( false, true );
 
-$pmpro_groups = pmprommpu_get_groups();
-
 $incoming_levels = pmpro_getMembershipLevelsForUser();
 
-$displayorder = pmprommpu_get_levels_and_groups_in_order();
+$level_groups  = pmpro_get_level_groups_in_order();
 
 $pmpro_levels = apply_filters( "pmpro_levels_array", $pmpro_levels );
 
@@ -20,17 +18,19 @@ if ( $pmpro_msg ) {
 <div id="pmpro_mmpu_levels">
 	<div id="pmpro_mmpu_groups">
 		<?php
-		//$count = 0;				
-		foreach ( $displayorder as $group => $grouplevels ) {
+		foreach ( $level_groups as $level_group ) {
+			$levels_in_group = pmpro_get_level_ids_for_group( $level_group->id );
+			if ( empty( $levels_in_group ) ) {
+				continue;
+			}
 
-			if ( !empty( $grouplevels )) {
 			?>
-			<div id="pmpro_mmpu_group-<?php echo $pmpro_groups[ $group ]->id; ?>"
-			     class="pmpro_mmpu_group <?php if ( intval( $pmpro_groups[ $group ]->allow_multiple_selections ) == 0 ) { ?>selectone<?php } ?>">
-				<h2 class="pmpro_mmpu_group-name"><?php echo $pmpro_groups[ $group ]->name ?></h2>
+			<div id="pmpro_mmpu_group-<?php echo $level_group->id; ?>"
+			     class="pmpro_mmpu_group <?php if ( intval( $level_group->allow_multiple_selections ) == 0 ) { ?>selectone<?php } ?>">
+				<h2 class="pmpro_mmpu_group-name"><?php echo $level_group->name ?></h2>
 				<p class="pmpro_mmpu_group-type">
 					<?php
-					if ( intval( $pmpro_groups[ $group ]->allow_multiple_selections ) > 0 ) {
+					if ( intval( $level_group->allow_multiple_selections ) > 0 ) {
 						_e( 'You can choose multiple levels from this group.', 'pmpro-multiple-memberships-per-user' );
 					} else {
 						_e( 'You can only choose one level from this group.', 'pmpro-multiple-memberships-per-user' );
@@ -39,11 +39,11 @@ if ( $pmpro_msg ) {
 				</p>
 				<?php
 
-				foreach ( $grouplevels as $level ) {
+				foreach ( $levels_in_group as $level ) {
 
 					?>
 					<div id="pmpro_mmpu_level-<?php echo $pmpro_levels[ $level ]->id; ?>"
-					     class="pmpro_mmpu_level group<?php echo $group; ?> <?php if ( isset($pmpro_groups[ $group ]->allow_multiple_selections) && intval( $pmpro_groups[ $group ]->allow_multiple_selections ) == 0 ) {
+					     class="pmpro_mmpu_level group<?php echo $level_group->id; ?> <?php if ( isset($level_group->allow_multiple_selections) && intval( $level_group->allow_multiple_selections ) == 0 ) {
 						     echo 'selectone';
 					     } ?>">
 						<div class="pmpro_level-info">
@@ -70,7 +70,7 @@ if ( $pmpro_msg ) {
 						</div> <!-- end pmpro_level-info -->
 						<div class="pmpro_level-action">
 							<?php
-							if ( $pmpro_groups[ $group ]->allow_multiple_selections > 0 ) {
+							if ( $level_group->allow_multiple_selections > 0 ) {
 								?>
 								<!-- change message class wrap to success for selected or error if removing -->
 								<label
@@ -78,7 +78,7 @@ if ( $pmpro_msg ) {
 										echo "pmpro_level-select-current";
 									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
 								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $group ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Add', 'pmpro-multiple-memberships-per-user' ); ?>
+								                                                                       data-groupid="<?php echo $level_group->id ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Add', 'pmpro-multiple-memberships-per-user' ); ?>
 								</label>
 								<?php
 							} else {
@@ -89,7 +89,7 @@ if ( $pmpro_msg ) {
 										echo "pmpro_level-select-current";
 									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
 								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $group; ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Select', 'pmpro-multiple-memberships-per-user' ); ?>
+								                                                                       data-groupid="<?php echo $level_group->id; ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Select', 'pmpro-multiple-memberships-per-user' ); ?>
 								</label>
 								<?php
 							}
@@ -101,7 +101,6 @@ if ( $pmpro_msg ) {
 				?>
 			</div> <!-- end pmpro_mmpu_group-ID -->
 			<?php
-			}
 		}
 		?>
 		<div class="pmpro_mmpu_checkout">
