@@ -64,7 +64,7 @@ function pmpro_mmpul_enqueue_scripts() {
  * Tell PMPro to look for templates in this plugin's templates/ folder.
  */
 function pmpro_mmpul_custom_template_path( $templates, $page_name ) {		
-	$templates[] = plugin_dir_path(__FILE__) . 'templates/' . $page_name . '.php';	
+	$templates[] = PMPRO_MMPU_LEGACY_DIR . '/templates/' . $page_name . '.php';
 	
 	return $templates;
 }
