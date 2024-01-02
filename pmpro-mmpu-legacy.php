@@ -65,8 +65,10 @@ function pmpro_mmpul_hook_functions() {
 		}
 	}
 
+	// Hook our checkout code.
+	add_action( 'pmpro_checkout_preheader_before_get_level_at_checkout', 'pmpro_mmpul_checkout_preheader_before_get_level_at_checkout' );
 }
-add_action( 'wp', 'pmpro_mmpul_hook_functions' );
+add_action( 'wp', 'pmpro_mmpul_hook_functions', 0 );
 
 /**
  * Check if the current gateway supports multiple level checkout.
