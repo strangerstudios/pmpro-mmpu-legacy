@@ -5,7 +5,7 @@
  */
 function pmpro_mmpul_enqueue_scripts() {
 	// Load styles.
-	$csspath = plugins_url("css/frontend.css", __FILE__);
+	$csspath = plugins_url( '/css/frontend.css', PMPRO_MMPU_LEGACY_FILE );
 	wp_enqueue_style( 'pmpro_mmpul_frontend', $csspath, array(), PMPRO_MMPU_LEGACY_VER, "screen");
 
 	// Load script.
@@ -34,7 +34,7 @@ function pmpro_mmpul_enqueue_scripts() {
 		}
 	}
 
-	wp_register_script( 'pmpro-mmpul-levels', plugins_url( '/js/levels.js', __FILE__ ), array( 'jquery' ), PMPRO_MMPU_LEGACY_VER, true );
+	wp_register_script( 'pmpro-mmpul-levels', plugins_url( '/js/levels.js', PMPRO_MMPU_LEGACY_FILE ), array( 'jquery' ), PMPRO_MMPU_LEGACY_VER, true );
 	wp_localize_script( 'pmpro-mmpul-levels', 'pmprolvl',
 		array(
 			'settings'       => array(
