@@ -126,13 +126,13 @@ function pmpro_mmpul_checkout_after_form() {
 		// If we found the level element...
 		if ( pmpro_level_element ) {
 			// Set the value of input #pmpro_level to $pmpro_mmpul_levels_being_purchased imploded with spaces.
-			pmpro_level_element.value = '<?php echo implode( ' ', $pmpro_mmpul_levels_being_purchased ); ?>';
+			pmpro_level_element.value = '<?php echo esc_attr( implode( ' ', $pmpro_mmpul_levels_being_purchased ) ); ?>';
 
 			// Create a hidden input for the levels being removed.
 			var pmpro_mmpul_removed_levels = document.createElement( 'input' );
 			pmpro_mmpul_removed_levels.type = 'hidden';
 			pmpro_mmpul_removed_levels.name = 'dellevels';
-			pmpro_mmpul_removed_levels.value = '<?php echo implode( ' ', $pmpro_mmpul_levels_being_removed ); ?>';
+			pmpro_mmpul_removed_levels.value = '<?php echo esc_attr( implode( ' ', $pmpro_mmpul_levels_being_removed ) ); ?>';
 			pmpro_level_element.parentNode.insertBefore( pmpro_mmpul_removed_levels, pmpro_level_element.nextSibling );
 		}
 	</script>
@@ -163,13 +163,13 @@ function pmpro_mmpul_level_cost_text() {
 
 	ob_start();
 	?>
-	<h4><?php _e( 'Adding Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4>
+	<h4><?php esc_html_e( 'Adding Levels', 'pmpro-mmpu-legacy' ); ?></h4>
 	<ul>
 		<?php
 		foreach ( $pmpro_mmpul_levels_being_purchased as $level_id ) {
 			$level = pmpro_getLevel( $level_id );
 			?>
-			<li><?php echo $level->name . ' (' . pmpro_getLevelCost( $level, true, true ) . pmpro_getLevelExpiration( $level ) . ')'; ?></li>
+			<li><?php echo wp_kses( $level->name . ' (' . pmpro_getLevelCost( $level, true, true ) . pmpro_getLevelExpiration( $level ) . ')', array( 'strong' => array() ) ); ?></li>
 			<?php
 		}
 		?>
@@ -177,13 +177,13 @@ function pmpro_mmpul_level_cost_text() {
 	<?php
 	if ( ! empty( $pmpro_mmpul_levels_being_removed ) ) {
 		?>
-		<h4><?php _e( 'Removing Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4>
+		<h4><?php esc_html_e( 'Removing Levels', 'pmpro-mmpu-legacy' ); ?></h4>
 		<ul>
 			<?php
 			foreach ( $pmpro_mmpul_levels_being_removed as $level_id ) {
 				$level = pmpro_getLevel( $level_id );
 				?>
-				<li><?php echo $level->name; ?></li>
+				<li><?php echo esc_html( $level->name ); ?></li>
 				<?php
 			}
 			?>

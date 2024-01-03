@@ -31,9 +31,9 @@ if ( $pmpro_msg ) {
 				<p class="pmpro_mmpu_group-type">
 					<?php
 					if ( intval( $level_group->allow_multiple_selections ) > 0 ) {
-						_e( 'You can choose multiple levels from this group.', 'pmpro-multiple-memberships-per-user' );
+						esc_html_e( 'You can choose multiple levels from this group.', 'pmpro-mmpu-legacy' );
 					} else {
-						_e( 'You can only choose one level from this group.', 'pmpro-multiple-memberships-per-user' );
+						esc_html_e( 'You can only choose one level from this group.', 'pmpro-mmpu-legacy' );
 					}
 					?>
 				</p>
@@ -51,7 +51,7 @@ if ( $pmpro_msg ) {
 							<p class="pmpro_level-price">
 								<?php
 								if ( pmpro_isLevelFree( $pmpro_levels[ $level ] ) ) {
-									_e( "Free", 'pmpro-multiple-memberships-per-user' );
+									esc_html_e( 'Free', 'pmpro-mmpu-legacy' );
 								} else {
 									echo pmpro_getLevelCost( $pmpro_levels[ $level ], true, true );
 								}
@@ -78,7 +78,7 @@ if ( $pmpro_msg ) {
 										echo "pmpro_level-select-current";
 									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
 								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $level_group->id ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Add', 'pmpro-multiple-memberships-per-user' ); ?>
+								                                                                       data-groupid="<?php echo $level_group->id ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Add', 'pmpro-mmpu-legacy' ); ?>
 								</label>
 								<?php
 							} else {
@@ -89,7 +89,7 @@ if ( $pmpro_msg ) {
 										echo "pmpro_level-select-current";
 									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
 								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $level_group->id; ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php _e( 'Select', 'pmpro-multiple-memberships-per-user' ); ?>
+								                                                                       data-groupid="<?php echo $level_group->id; ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Select', 'pmpro-mmpu-legacy' ); ?>
 								</label>
 								<?php
 							}
@@ -107,7 +107,7 @@ if ( $pmpro_msg ) {
 			<div class="pmpro_mmpu_level">
 				<div class="pmpro_level-info"></div> <!-- end pmpro_level-info -->
 				<div class="pmpro_level-action">
-					<input class="pmpro_mmpu_checkout-button" type="button" value="<?php esc_attr_e( 'Checkout', 'pmpro-multiple-memberships-per-user' ) ?>" disabled="disabled">
+					<input class="pmpro_mmpu_checkout-button" type="button" value="<?php esc_attr_e( 'Checkout', 'pmpro-mmpu-legacy' ) ?>" disabled="disabled">
 				</div> <!-- end pmpro_level-action -->
 			</div> <!-- end pmpro_mmpu_level -->
 		</div> <!-- end pmpro_mmpu_checkout -->
@@ -115,18 +115,18 @@ if ( $pmpro_msg ) {
 	</div> <!-- end pmpro_mmpu_groups -->
 	<div id="pmpro_mmpu_level_selections">
 		<aside class="widget">
-			<h3 class="widget-title"><?php _e( 'Membership Selections', 'pmpro-multiple-memberships-per-user' ); ?></h3>
-			<div id="pmpro_mmpu_level_summary"><?php _e( 'Select levels to complete checkout.', 'pmpro-multiple-memberships-per-user' ); ?></div>
-			<p><input class="pmpro_mmpu_checkout-button" type="button" value="<?php esc_attr_e( 'Checkout', 'pmpro-multiple-memberships-per-user' ) ?>" disabled="disabled"></p>
+			<h3 class="widget-title"><?php esc_html_e( 'Membership Selections', 'pmpro-mmpu-legacy' ); ?></h3>
+			<div id="pmpro_mmpu_level_summary"><?php esc_html_e( 'Select levels to complete checkout.', 'pmpro-mmpu-legacy' ); ?></div>
+			<p><input class="pmpro_mmpu_checkout-button" type="button" value="<?php esc_attr_e( 'Checkout', 'pmpro-mmpu-legacy' ) ?>" disabled="disabled"></p>
 		</aside>
 	</div> <!-- end pmpro_mmpu_level_selections -->
 </div> <!-- end #pmpro_mmpu_levels -->
 <nav id="nav-below" class="navigation" role="navigation">
 	<div class="nav-previous alignleft">
 		<?php if ( ! empty( $current_user->membership_level->id ) ) { ?>
-			<a href="<?php echo pmpro_url( "account" ) ?>"><?php _e( '&larr; Return to Your Account', 'pmpro-multiple-memberships-per-user' ); ?></a>
+			<a href="<?php echo pmpro_url( "account" ) ?>">&larr; <?php esc_html_e( 'Return to Your Account', 'pmpro-mmpu-legacy' ); ?></a>
 		<?php } else { ?>
-			<a href="<?php echo home_url() ?>"><?php _e( '&larr; Return to Home', 'pmpro-multiple-memberships-per-user' ); ?></a>
+			<a href="<?php echo home_url() ?>">&larr; <?php esc_html_e( 'Return to Home', 'pmpro-mmpu-legacy' ); ?></a>
 		<?php } ?>
 	</div>
 </nav>
