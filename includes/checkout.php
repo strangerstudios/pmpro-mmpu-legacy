@@ -12,9 +12,15 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	// Levels can be passed in via $_REQUEST['level'] or $_REQUEST['pmpro_level'].
 	$pmpro_mmpul_levels_being_purchased = isset( $_REQUEST['pmpro_level'] ) ? $_REQUEST['pmpro_level'] : ( isset( $_REQUEST['level'] ) ? $_REQUEST['level'] : null );
 
-	// If $levels_being_purchased is empty or does not have a space, we are not purchasing multiple levels
-	// and don't need to do anything. Wipe the global and return.
-	if ( empty( $pmpro_mmpul_levels_being_purchased ) || strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false ) {
+	// If no level was passed via URL, then the MMPU level select was not used. Bail and let checkout process normally.
+	if ( empty( $pmpro_mmpul_levels_being_purchased ) ) {
+		$pmpro_mmpul_levels_being_purchased = null;
+		return;
+	}
+
+	// If $levels_being_purchased is a single level and no levels are specified to be deleted, then this can be treated as a normal checkout.
+	// Bail and let checkout process normally.
+	if ( strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false && empty( $_REQUEST['dellevels'] ) ) {
 		$pmpro_mmpul_levels_being_purchased = null;
 		return;
 	}
