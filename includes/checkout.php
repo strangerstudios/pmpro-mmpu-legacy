@@ -115,34 +115,33 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 function pmpro_mmpul_checkout_after_form() {
 	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
 
-	// Fix levels being purchased.
-	if ( ! empty( $pmpro_mmpul_levels_being_purchased ) ) {
-		?>
-		<script>
-			// Set the value of input #pmpro_level to $pmpro_mmpul_levels_being_purchased imploded with spaces.
-			document.getElementById( 'pmpro_level' ).value = '<?php echo implode( ' ', $pmpro_mmpul_levels_being_purchased ); ?>';
-		</script>
-		<?php
-	}
+	?>
+	<script>
+		// Get the level element. Will either have ID pmpro_level or level.
+		var pmpro_level_element = document.getElementById( 'pmpro_level' );
+		if ( ! pmpro_level_element ) {
+			pmpro_level_element = document.getElementById( 'level' );
+		}
 
-	// Add field for levels being removed.
-	if ( ! empty( $pmpro_mmpul_levels_being_removed ) ) {
-		?>
-		<script>
-			// Create a new hidden input after #pmpro_level with the value of $pmpro_mmpul_levels_being_removed imploded with spaces.
+		// If we found the level element...
+		if ( pmpro_level_element ) {
+			// Set the value of input #pmpro_level to $pmpro_mmpul_levels_being_purchased imploded with spaces.
+			pmpro_level_element.value = '<?php echo implode( ' ', $pmpro_mmpul_levels_being_purchased ); ?>';
+
+			// Create a hidden input for the levels being removed.
 			var pmpro_mmpul_removed_levels = document.createElement( 'input' );
 			pmpro_mmpul_removed_levels.type = 'hidden';
 			pmpro_mmpul_removed_levels.name = 'dellevels';
 			pmpro_mmpul_removed_levels.value = '<?php echo implode( ' ', $pmpro_mmpul_levels_being_removed ); ?>';
-			document.getElementById( 'pmpro_level' ).parentNode.insertBefore( pmpro_mmpul_removed_levels, document.getElementById( 'pmpro_level' ).nextSibling );
-		</script>
-		<?php
-	}
+			pmpro_level_element.parentNode.insertBefore( pmpro_mmpul_removed_levels, pmpro_level_element.nextSibling );
+		}
+	</script>
+	<?php
 
 	// Hide .pmpro_level_name_text and .pmpro_level_description_text.
 	?>
 	<style>
-		.pmpro_level_name_text, .pmpro_level_description_text {
+		.pmpro_level_name_text, .pmpro_level_description_text, .pmpro_level_cost_text br {
 			display: none;
 		}
 	</style>
