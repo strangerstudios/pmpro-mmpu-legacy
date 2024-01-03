@@ -96,6 +96,9 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	// Add JS to "fix" checkout page fields.
 	add_action( 'pmpro_checkout_after_form', 'pmpro_mmpul_checkout_after_form' );
 
+	// Filter the level cost text to show the levels being purchased/removed.
+	add_filter( 'pmpro_level_cost_text', 'pmpro_mmpul_level_cost_text' );
+
 	// Add JS to process additional level purchases after initial checkout.
 	// Run on late priority to try to maintain compatibility with other Add Ons. We will rerun this filter for each additional checkout.
 	add_action( 'pmpro_after_checkout', 'pmpro_mmpul_after_checkout', 100, 2 );
@@ -144,40 +147,55 @@ function pmpro_mmpul_checkout_after_form() {
 		}
 	</style>
 	<?php
+}
 
-	// Get the details of the levels being purchased/removed.
-	$level_add_details = array();
-	foreach ( $pmpro_mmpul_levels_being_purchased as $level_id ) {
-		$level = pmpro_getLevel( $level_id );
-		$level_add_details[] = $level->name . ' (' . pmpro_getLevelCost( $level, true, true ) . pmpro_getLevelExpiration( $level ) . ')';
-	}
-	$level_remove_details = array();
-	foreach ( $pmpro_mmpul_levels_being_removed as $level_id ) {
-		$level = pmpro_getLevel( $level_id );
-		$level_remove_details[] = $level->name;
-	}
+/**
+ * Filter the level cost text to show the levels being purchased/removed.
+ *
+ * @since TBD
+ *
+ * @return string HTML for the level cost text.
+ */
+function pmpro_mmpul_level_cost_text() {
+	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
+
+	// Remove this filter temporarily so that we don't get stuck in an infinite loop.
+	remove_filter( 'pmpro_level_cost_text', 'pmpro_mmpul_level_cost_text' );
+
+	ob_start();
 	?>
-	<script>
-		const levels_to_add = <?php echo json_encode( $level_add_details ); ?>;
-		const levels_to_remove = <?php echo json_encode( $level_remove_details ); ?>;
-		console.log( levels_to_add );
-		console.log( levels_to_remove );
-		var level_cost_html = '<h4><?php _e( 'Adding Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4><ul>';
-		levels_to_add.forEach( function( level ) {
-			level_cost_html += '<li>' + level + '</li>';
-		} );
-		level_cost_html += '</ul>';
-		if ( levels_to_remove.length > 0 ) {
-			level_cost_html += '<h4><?php _e( 'Removing Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4><ul>';
-			levels_to_remove.forEach( function( level ) {
-				level_cost_html += '<li>' + level + '</li>';
-			} );
-			level_cost_html += '</ul>';
+	<h4><?php _e( 'Adding Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4>
+	<ul>
+		<?php
+		foreach ( $pmpro_mmpul_levels_being_purchased as $level_id ) {
+			$level = pmpro_getLevel( $level_id );
+			?>
+			<li><?php echo $level->name . ' (' . pmpro_getLevelCost( $level, true, true ) . pmpro_getLevelExpiration( $level ) . ')'; ?></li>
+			<?php
 		}
-		document.getElementById( 'pmpro_level_cost' ).innerHTML = level_cost_html;
-
-	</script>
+		?>
+	</ul>
 	<?php
+	if ( ! empty( $pmpro_mmpul_levels_being_removed ) ) {
+		?>
+		<h4><?php _e( 'Removing Levels', 'pmpro-multiple-memberships-per-user' ); ?></h4>
+		<ul>
+			<?php
+			foreach ( $pmpro_mmpul_levels_being_removed as $level_id ) {
+				$level = pmpro_getLevel( $level_id );
+				?>
+				<li><?php echo $level->name; ?></li>
+				<?php
+			}
+			?>
+		</ul>
+		<?php
+	}
+
+	// Add this filter back.
+	add_filter( 'pmpro_level_cost_text', 'pmpro_mmpul_level_cost_text' );
+
+	return ob_get_clean();
 }
 
 /**
