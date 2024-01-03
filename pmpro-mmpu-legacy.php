@@ -50,22 +50,34 @@ add_action( 'init', 'pmpro_mmpul_load_plugin_text_domain' );
 function pmpro_mmpul_hook_functions() {
 	global $pmpro_pages, $post;
 
-	// If we're in the admin, PMPro is not active, or the current gateway doesn't support multiple level checkout, bail.
-	if ( is_admin() || ! defined( 'PMPRO_VERSION' ) || ! pmpro_mmpul_gateway_supports_multiple_level_checkout() ) {		
+	// If we're in the admin, we don't need to load any of this. Bail.
+	if ( is_admin() ) {		
 		return;
     }
+
+	// If PMPro is not active or if not using PMPro 3.0+ (including beta), bail.
+	if ( ! defined( 'PMPRO_VERSION' ) || ! class_exists( 'PMPro_Subscription' ) ) {
+		return;
+	}
+
+	// If the chosen gateway does not support multiple level checkout, bail.
+	if ( ! pmpro_mmpul_gateway_supports_multiple_level_checkout() ) {
+		return;
+	}
 
 	// Check if we are on the levels page.
 	if ( is_page( $pmpro_pages['levels'] ) || ( !empty( $post->post_content ) && false !== stripos( $post->post_content, '[pmpro_advanced_levels' ) ) ) {
 		// Check if the levels multiselect page is disabled.
 		if ( ! apply_filters( 'pmprommpu_disable_levels_multiselect_page', false ) ) {
 			// Set up the multiselect levels page.
+			include_once( PMPRO_MMPU_LEGACY_DIR . '/includes/levels.php' );
 			add_action( 'wp_enqueue_scripts', 'pmpro_mmpul_enqueue_scripts' );
 			add_filter( 'pmpro_pages_custom_template_path', 'pmpro_mmpul_custom_template_path', 10, 2 );
 		}
 	}
 
 	// Hook our checkout code.
+	include_once( PMPRO_MMPU_LEGACY_DIR . '/includes/checkout.php' );
 	add_action( 'pmpro_checkout_preheader_before_get_level_at_checkout', 'pmpro_mmpul_checkout_preheader_before_get_level_at_checkout' );
 }
 add_action( 'wp', 'pmpro_mmpul_hook_functions', 0 );
@@ -80,9 +92,15 @@ function pmpro_mmpul_gateway_supports_multiple_level_checkout( $gateway = null )
 	
     // Core gateways.
 	$has_support = ! in_array( $gateway, array( 'paypalexpress', 'paypalstandard' ) );
+
+	// If Stripe Checkout is being used, there is not support.
+	$has_support = ( $has_support && ! ( $gateway === 'stripe' && PMProGateway_stripe::using_stripe_checkout() ) );
+
+	// If the Add PayPal Express Add On is being used, there is not support.
+	$has_support = ( $has_support && ! function_exists( 'pmproappe_plugin_row_meta' ) );
+
+	// If Pay By Check Add On is being used, there is not support.
+	$has_support = ( $has_support && ! function_exists( 'pmpropbc_plugin_row_meta' ) );
 	
     return apply_filters( 'pmprommpu_gateway_supports_multiple_level_checkout', $has_support, $gateway );
 }
-
-include_once( PMPRO_MMPU_LEGACY_DIR . '/includes/levels.php' );
-include_once( PMPRO_MMPU_LEGACY_DIR . '/includes/checkout.php' );
