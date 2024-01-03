@@ -217,6 +217,9 @@ function pmpro_mmpul_after_checkout( $user_id, $order ) {
 	// Unhook this function so that we don't run this again during our additional checkouts.
 	remove_action( 'pmpro_after_checkout', 'pmpro_mmpul_after_checkout', 100, 2 );
 
+	// Also unhook the filter on level_cost_text as we want the emails to have the correct level cost text per level.
+	remove_filter( 'pmpro_level_cost_text', 'pmpro_mmpul_level_cost_text' );
+
 	// Now, for each level still in $pmpro_mmpul_levels_being_purchased, process an additional checkout.
 	foreach ( $pmpro_mmpul_levels_being_purchased as $level_id ) {
 		// Get the level object.
