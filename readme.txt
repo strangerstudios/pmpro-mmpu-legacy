@@ -31,5 +31,5 @@ Please post it in the GitHub issue tracker here: https://github.com/strangerstud
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
-= .1 =
+= 0.1 - 2024-03-21 =
 * Initial version.
