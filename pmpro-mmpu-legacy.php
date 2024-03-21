@@ -1,7 +1,7 @@
 <?php
 /**
 * Plugin Name: Paid Memberships Pro - Multiple Memberships per User (Legacy Plugin)
-* Plugin URI: http://www.paidmembershipspro.com/pmpro-multiple-memberships-per-user/
+* Plugin URI: http://www.paidmembershipspro.com/add-ons/pmpro-mmpu-legacy/
 * Description: Preserve some aspects of the old MMPU add on for PMPro 3.0+.
 * Version: 0.1
 * Author: Paid Memberships Pro
