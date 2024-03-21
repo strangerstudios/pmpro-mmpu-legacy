@@ -40,7 +40,10 @@ if ( $pmpro_msg ) {
 				<?php
 
 				foreach ( $levels_in_group as $level ) {
-
+					// Accounting for deleted levels that might still be in the group.
+					if ( empty( $pmpro_levels[ $level ] ) ) {						
+						continue;
+					}
 					?>
 					<div id="pmpro_mmpu_level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"
 					     class="pmpro_mmpu_level group<?php echo esc_attr( $level_group->id ); ?> <?php if ( isset($level_group->allow_multiple_selections) && intval( $level_group->allow_multiple_selections ) == 0 ) {
