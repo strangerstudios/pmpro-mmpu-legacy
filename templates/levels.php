@@ -11,7 +11,7 @@ $pmpro_levels = apply_filters( "pmpro_levels_array", $pmpro_levels );
 
 if ( $pmpro_msg ) {
 	?>
-	<div class="pmpro_message <?php echo esc_attr( $pmpro_msgt ) ?>"><?php echo pmpro_kses_post( $pmpro_msg ); ?></div>
+	<div class="pmpro_message <?php echo esc_attr( $pmpro_msgt ) ?>"><?php echo wp_kses_post( $pmpro_msg ); ?></div>
 	<?php
 }
 ?>
