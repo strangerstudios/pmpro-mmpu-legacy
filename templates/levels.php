@@ -11,7 +11,7 @@ $pmpro_levels = apply_filters( "pmpro_levels_array", $pmpro_levels );
 
 if ( $pmpro_msg ) {
 	?>
-	<div class="pmpro_message <?php echo $pmpro_msgt ?>"><?php echo $pmpro_msg ?></div>
+	<div class="pmpro_message <?php echo esc_attr( $pmpro_msgt ) ?>"><?php echo pmpro_kses_post( $pmpro_msg ); ?></div>
 	<?php
 }
 ?>
@@ -25,9 +25,9 @@ if ( $pmpro_msg ) {
 			}
 
 			?>
-			<div id="pmpro_mmpu_group-<?php echo $level_group->id; ?>"
+			<div id="pmpro_mmpu_group-<?php echo esc_attr( $level_group->id ); ?>"
 			     class="pmpro_mmpu_group <?php if ( intval( $level_group->allow_multiple_selections ) == 0 ) { ?>selectone<?php } ?>">
-				<h2 class="pmpro_mmpu_group-name"><?php echo $level_group->name ?></h2>
+				<h2 class="pmpro_mmpu_group-name"><?php echo esc_html( $level_group->name ); ?></h2>
 				<p class="pmpro_mmpu_group-type">
 					<?php
 					if ( intval( $level_group->allow_multiple_selections ) > 0 ) {
@@ -42,18 +42,18 @@ if ( $pmpro_msg ) {
 				foreach ( $levels_in_group as $level ) {
 
 					?>
-					<div id="pmpro_mmpu_level-<?php echo $pmpro_levels[ $level ]->id; ?>"
-					     class="pmpro_mmpu_level group<?php echo $level_group->id; ?> <?php if ( isset($level_group->allow_multiple_selections) && intval( $level_group->allow_multiple_selections ) == 0 ) {
+					<div id="pmpro_mmpu_level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"
+					     class="pmpro_mmpu_level group<?php echo esc_attr( $level_group->id ); ?> <?php if ( isset($level_group->allow_multiple_selections) && intval( $level_group->allow_multiple_selections ) == 0 ) {
 						     echo 'selectone';
 					     } ?>">
 						<div class="pmpro_level-info">
-							<h3 class="pmpro_level-name"><?php echo $pmpro_levels[ $level ]->name; ?></h3>
+							<h3 class="pmpro_level-name"><?php echo esc_attr( $pmpro_levels[ $level ]->name ); ?></h3>
 							<p class="pmpro_level-price">
 								<?php
 								if ( pmpro_isLevelFree( $pmpro_levels[ $level ] ) ) {
 									esc_html_e( 'Free', 'pmpro-mmpu-legacy' );
 								} else {
-									echo pmpro_getLevelCost( $pmpro_levels[ $level ], true, true );
+									echo wp_kses_post( pmpro_getLevelCost( $pmpro_levels[ $level ], true, true ) );
 								}
 								?>
 							</p> <!-- end pmpro_level-price -->
@@ -62,7 +62,7 @@ if ( $pmpro_msg ) {
 							if ( ! empty( $expiration_text ) ) {
 								?>
 								<p class="pmpro_level-expiration">
-									<?php echo $expiration_text; ?>
+									<?php echo wp_kses_post( $expiration_text ); ?>
 								</p> <!-- end pmpro_level-expiration -->
 								<?php
 							}
@@ -76,9 +76,9 @@ if ( $pmpro_msg ) {
 								<label
 									class="pmpro_level-select <?php if ( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ) ) {
 										echo "pmpro_level-select-current";
-									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
-								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $level_group->id ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Add', 'pmpro-mmpu-legacy' ); ?>
+									} ?>" for="level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"><input type="checkbox"
+									id="level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"
+									data-groupid="<?php echo esc_attr( $level_group->id ); ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Add', 'pmpro-mmpu-legacy' ); ?>
 								</label>
 								<?php
 							} else {
@@ -87,9 +87,9 @@ if ( $pmpro_msg ) {
 								<label
 									class="pmpro_level-select <?php if ( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ) ) {
 										echo "pmpro_level-select-current";
-									} ?>" for="level-<?php echo $pmpro_levels[ $level ]->id ?>"><input type="checkbox"
-								                                                                       id="level-<?php echo $pmpro_levels[ $level ]->id ?>"
-								                                                                       data-groupid="<?php echo $level_group->id; ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Select', 'pmpro-mmpu-legacy' ); ?>
+									} ?>" for="level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"><input type="checkbox"
+									id="level-<?php echo esc_attr( $pmpro_levels[ $level ]->id ); ?>"
+									data-groupid="<?php echo esc_attr( $level_group->id ); ?>" <?php checked( pmpro_hasMembershipLevel( $pmpro_levels[ $level ]->id ), true ); ?>>&nbsp;&nbsp;<?php esc_html_e( 'Select', 'pmpro-mmpu-legacy' ); ?>
 								</label>
 								<?php
 							}
@@ -124,9 +124,9 @@ if ( $pmpro_msg ) {
 <nav id="nav-below" class="navigation" role="navigation">
 	<div class="nav-previous alignleft">
 		<?php if ( ! empty( $current_user->membership_level->id ) ) { ?>
-			<a href="<?php echo pmpro_url( "account" ) ?>">&larr; <?php esc_html_e( 'Return to Your Account', 'pmpro-mmpu-legacy' ); ?></a>
+			<a href="<?php echo esc_url( pmpro_url( "account" ) ); ?>">&larr; <?php esc_html_e( 'Return to Your Account', 'pmpro-mmpu-legacy' ); ?></a>
 		<?php } else { ?>
-			<a href="<?php echo home_url() ?>">&larr; <?php esc_html_e( 'Return to Home', 'pmpro-mmpu-legacy' ); ?></a>
+			<a href="<?php echo esc_url( home_url() ); ?>">&larr; <?php esc_html_e( 'Return to Home', 'pmpro-mmpu-legacy' ); ?></a>
 		<?php } ?>
 	</div>
 </nav>
