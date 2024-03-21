@@ -4,7 +4,7 @@
  * Get the levels being purchased/removed at checkout and set them to globals.
  * Set up $_REQUEST so that core PMPro functions work as expected.
  *
- * @since TBD
+ * @since 0.1
  */
 function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
@@ -110,7 +110,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 /**
  * "Fix" fields on checkout form for MMPU checkout.
  *
- * @since TBD
+ * @since 0.1
  */
 function pmpro_mmpul_checkout_after_form() {
 	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
@@ -151,7 +151,7 @@ function pmpro_mmpul_checkout_after_form() {
 /**
  * Filter the level cost text to show the levels being purchased/removed.
  *
- * @since TBD
+ * @since 0.1
  *
  * @return string HTML for the level cost text.
  */
@@ -200,7 +200,7 @@ function pmpro_mmpul_level_cost_text() {
 /**
  * Process additional level purchases after initial checkout.
  *
- * @since TBD
+ * @since 0.1
  *
  * @param int $user_id ID of the user checking out.
  * @param MemberOrder $order Order object for the checkout.
@@ -254,7 +254,7 @@ function pmpro_mmpul_after_checkout( $user_id, $order ) {
 /**
  * Always send user to the account page after checkout so that they can see their current levels and try again if needed.
  *
- * @since TBD
+ * @since 0.1
  *
  * @param string $url URL to redirect to.
  */
