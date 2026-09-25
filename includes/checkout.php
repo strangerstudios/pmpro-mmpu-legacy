@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Get the levels being purchased/removed at checkout and set them to globals.
  * Set up $_REQUEST so that core PMPro functions work as expected.
@@ -10,7 +14,8 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
 
 	// Levels can be passed in via $_REQUEST['level'] or $_REQUEST['pmpro_level'].
-	$pmpro_mmpul_levels_being_purchased = isset( $_REQUEST['pmpro_level'] ) ? $_REQUEST['pmpro_level'] : ( isset( $_REQUEST['level'] ) ? $_REQUEST['level'] : null );
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the level IDs to set up checkout; the purchase itself is gated by the core checkout nonce (pmpro_checkout_nonce in preheaders/checkout.php).
+	$pmpro_mmpul_levels_being_purchased = isset( $_REQUEST['pmpro_level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['pmpro_level'] ) ) : ( isset( $_REQUEST['level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['level'] ) ) : null );
 
 	// If no level was passed via URL, then the MMPU level select was not used. Bail and let checkout process normally.
 	if ( empty( $pmpro_mmpul_levels_being_purchased ) ) {
@@ -20,7 +25,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 
 	// If $levels_being_purchased is a single level and no levels are specified to be deleted, then this can be treated as a normal checkout.
 	// Bail and let checkout process normally.
-	if ( strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false && empty( $_REQUEST['dellevels'] ) ) {
+	if ( strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false && empty( $_REQUEST['dellevels'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check; checkout is gated by the core checkout nonce.
 		$pmpro_mmpul_levels_being_purchased = null;
 		return;
 	}
@@ -33,8 +38,10 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	$user_level_ids = array_map( 'intval', wp_list_pluck( $user_levels, 'ID' ) );
 
 	// If the user passed levels to remove via $_REQUEST['dellevels'], save them to $pmpro_mmpul_levels_being_removed.
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Levels are only removed in pmpro_after_checkout, after core verifies the checkout nonce (pmpro_checkout_nonce in preheaders/checkout.php).
 	if ( ! empty( $_REQUEST['dellevels'] ) ) {
-		$pmpro_mmpul_levels_being_removed = array_map( 'intval', explode( ' ', $_REQUEST['dellevels'] ) );
+		$pmpro_mmpul_levels_being_removed = array_map( 'intval', explode( ' ', sanitize_text_field( wp_unslash( $_REQUEST['dellevels'] ) ) ) );
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		// If any of the levels being removed are not in the user's current levels or are being purchased, unset them.
 		foreach ( $pmpro_mmpul_levels_being_removed as $key => $remove_level ) {
@@ -63,7 +70,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 
 		// If multiple levels in this group are being purchased, redirect to the levels page.
 		if ( count( $levels_in_group_being_purchased ) > 1 ) {
-			wp_redirect( pmpro_url( 'levels' ) );
+			wp_redirect( pmpro_url( 'levels' ) ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- pmpro_url() is filterable and may point offsite (e.g. Network Subsite).
 			exit;
 		} elseif ( count( $levels_in_group_being_purchased ) == 1 ) {
 			// If only one level in this group is being purchased, if the user has other levels in this group, add them to $pmpro_mmpul_levels_being_removed.
@@ -89,7 +96,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 			break;
 		}
 	}
-	if ( ! isset( $_REQUEST['pmpro_level'] ) ) {
+	if ( ! isset( $_REQUEST['pmpro_level'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only checks whether a level is already set; the value is not read here.
 		$_REQUEST['pmpro_level'] = $pmpro_mmpul_levels_being_purchased[0];
 	}
 
