@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, checkout
 Requires at least: 4.0
-Tested up to: 6.4
-Stable tag: 0.1
+Tested up to: 7.1
+Stable tag: 0.1.1
 
 Preserve some aspects of the old MMPU add on for PMPro 3.0+.
 
@@ -31,5 +31,8 @@ Please post it in the GitHub issue tracker here: https://github.com/strangerstud
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+= 0.1.1 - 2026-09-29 =
+* SECURITY: Improved sanitization and escaping throughout the plugin to resolve Plugin Check security findings. #2 (@dparker1005)
+
 = 0.1 - 2024-03-21 =
 * Initial version.

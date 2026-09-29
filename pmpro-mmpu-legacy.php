@@ -3,7 +3,7 @@
 * Plugin Name: Paid Memberships Pro - Multiple Memberships per User (Legacy Plugin)
 * Plugin URI: http://www.paidmembershipspro.com/add-ons/pmpro-mmpu-legacy/
 * Description: Preserve some aspects of the old MMPU add on for PMPro 3.0+.
-* Version: 0.1
+* Version: 0.1.1
 * Author: Paid Memberships Pro
 * Author URI: https://www.paidmembershipspro.com
 * Text Domain: pmpro-mmpu-legacy
@@ -34,7 +34,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'PMPRO_MMPU_LEGACY_FILE', __FILE__ );
 define( 'PMPRO_MMPU_LEGACY_DIR', dirname(__FILE__) ); // signals our presence to the mother ship, and other add-ons
-define( 'PMPRO_MMPU_LEGACY_VER', '0.1' ); // Version string to signal cache refresh during JS/CSS updates
+define( 'PMPRO_MMPU_LEGACY_VER', '0.1.1' ); // Version string to signal cache refresh during JS/CSS updates
 
 /**
  * Load the text domain.
