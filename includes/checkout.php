@@ -14,7 +14,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	global $pmpro_mmpul_levels_being_purchased, $pmpro_mmpul_levels_being_removed;
 
 	// Levels can be passed in via $_REQUEST['level'] or $_REQUEST['pmpro_level'].
-	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the level IDs to set up checkout; the purchase itself is gated by the core checkout nonce (pmpro_checkout_nonce in preheaders/checkout.php).
+	// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Reading the level IDs to set up checkout; purchases happen in pmpro_after_checkout, after core's checkout validation (nonce enforced unless the site opted in to a pre-3.0 custom checkout template).
 	$pmpro_mmpul_levels_being_purchased = isset( $_REQUEST['pmpro_level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['pmpro_level'] ) ) : ( isset( $_REQUEST['level'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['level'] ) ) : null );
 
 	// If no level was passed via URL, then the MMPU level select was not used. Bail and let checkout process normally.
@@ -25,7 +25,7 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 
 	// If $levels_being_purchased is a single level and no levels are specified to be deleted, then this can be treated as a normal checkout.
 	// Bail and let checkout process normally.
-	if ( strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false && empty( $_REQUEST['dellevels'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check; checkout is gated by the core checkout nonce.
+	if ( strpos( $pmpro_mmpul_levels_being_purchased, ' ' ) === false && empty( $_REQUEST['dellevels'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only check; no state changes here.
 		$pmpro_mmpul_levels_being_purchased = null;
 		return;
 	}
@@ -38,10 +38,9 @@ function pmpro_mmpul_checkout_preheader_before_get_level_at_checkout() {
 	$user_level_ids = array_map( 'intval', wp_list_pluck( $user_levels, 'ID' ) );
 
 	// If the user passed levels to remove via $_REQUEST['dellevels'], save them to $pmpro_mmpul_levels_being_removed.
-	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Levels are only removed in pmpro_after_checkout, after core verifies the checkout nonce (pmpro_checkout_nonce in preheaders/checkout.php).
-	if ( ! empty( $_REQUEST['dellevels'] ) ) {
-		$pmpro_mmpul_levels_being_removed = array_map( 'intval', explode( ' ', sanitize_text_field( wp_unslash( $_REQUEST['dellevels'] ) ) ) );
-		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+	// Levels are only removed in pmpro_after_checkout, after core's checkout validation (nonce enforced unless the site opted in to a pre-3.0 custom checkout template).
+	if ( ! empty( $_REQUEST['dellevels'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$pmpro_mmpul_levels_being_removed = array_map( 'intval', explode( ' ', sanitize_text_field( wp_unslash( $_REQUEST['dellevels'] ) ) ) ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 
 		// If any of the levels being removed are not in the user's current levels or are being purchased, unset them.
 		foreach ( $pmpro_mmpul_levels_being_removed as $key => $remove_level ) {
