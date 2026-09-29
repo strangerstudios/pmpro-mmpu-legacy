@@ -1,4 +1,7 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 global $wpdb, $pmpro_msg, $pmpro_msgt, $current_user;
 
 $pmpro_levels = pmpro_getAllLevels( false, true );
